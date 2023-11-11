@@ -1,0 +1,145 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Colosseum",
+        "year_built": 80
+      },
+      "geometry": {
+        "coordinates": [
+          12.492359242137951,
+          41.89024236781651
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Saint Peter's Basilica",
+        "year_built": 1626
+      },
+      "geometry": {
+        "coordinates": [
+          12.453704756043606,
+          41.90216340869398
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Pantheon",
+        "year_built": 126
+      },
+      "geometry": {
+        "coordinates": [
+          12.476843088624264,
+          41.898592134107275
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Trevi Fountain",
+        "year_built": 1762
+      },
+      "geometry": {
+        "coordinates": [
+          12.48328695767438,
+          41.900943833068965
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Villa Borghese Gallery",
+        "year_built": 1616
+      },
+      "geometry": {
+        "coordinates": [
+          12.49209329650833,
+          41.91413604843757
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Trajan's Column",
+        "year_built": 113
+      },
+      "geometry": {
+        "coordinates": [
+          12.484275479114416,
+          41.89578345000851
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Vittoriano",
+        "year_built": 1925
+      },
+      "geometry": {
+        "coordinates": [
+          12.483130761245548,
+          41.89451092915647
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Capitoline Museums",
+        "year_built": 1734
+      },
+      "geometry": {
+        "coordinates": [
+          12.482267804231554,
+          41.892712513901614
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Spanish Steps",
+        "year_built": 1725
+      },
+      "geometry": {
+        "coordinates": [
+          12.482768002193723,
+          41.90595658579517
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sistine Chapel",
+        "year_built": 1481
+      },
+      "geometry": {
+        "coordinates": [
+          12.454398785191245,
+          41.90293286548405
+        ],
+        "type": "Point"
+      }
+    }
+  ]
+}

@@ -1,128 +1,201 @@
 <!DOCTYPE html>
-<html lang="en-US">
- <head>
-   <meta charset="utf-8">
-    <title>Earthquake List</title>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Load data from an external GeoJSON file</title>
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.js"></script>
     <style>
-     body {
-         margin: 0;
-         padding: 0;
-     }
-     
-     #container {
-         display: flex;
-         height: 100vh;
-         flex-direction: row;
-         align-items: stretch;
-     }
+        body {
+            margin: 0;
+            padding: 0;
+        }
 
-     #side-panel {
-         flex-basis: 500px;
-         overflow-y: scroll;
-     }
+        h2 {
+            text-align: center;
+        }
 
-    #map {
-        flex-grow: 1;
-    }
+        #container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-    button {
-        margin-bottom: 10px;
-    }
-     
-    table {
-        border-collapse: collapse;
-        border-spacing: 0;
-        width: 100%;
-        border: 1px solid #ddd;
-    } 
+        #table {
+            flex-basis: 250px;
+            overflow-y: auto;
+            background: #fff;
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 100vh; /* Set the height to cover the full screen */
+            z-index: 1; /* Ensure the table appears above the map */
+            text-align: center;
+        }
 
-    th,
-    td {
-        text-align: left;
-        padding: 16px;
-    }
+        #map {
+            flex-grow: 1;
+            height: 100vh;
+            position: relative; /* Ensure the map stays within the container */
+        }
 
-	tr:nth-child(even) {
-    	background-color: #f2f2f2;
-	}
+        button {
+            margin-bottom: 10px;
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+            border: 1px solid #ddd;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 16px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        @media (max-width: 1024px) {
+            #table {
+                display: none; /* Hide the side panel */
+            }
+
+            #map {
+                flex-grow: 1;
+            }
+        }
     </style>
- </head>
- <body>
-   <main id="container">
-       <div id="side-panel">
+</head>
 
-           <h2>Earthquake List</h2>
-           <button>Sort by Magnitude</button>
+<body>
+    <main id="container">
+        <div id="table">
 
-           <table>
-               <tr>
-                   <th>id</th>
-                   <th>magnitude</th>
-                   <th>timestamp</th>
-               </tr>
-           </table>
+            <h2>Rome's Landmarks</h2>
+            <button onclick="sortTable()">Sort by Year Built</button>
 
-       </div>
-       <div id="map"></div>
-   </main>
-   <script>
-       mapboxgl.accessToken = 'pk.eyJ1Ijoic2xlbzEwOCIsImEiOiJjbG9vdTVobngwMXVqMmtuMHVldHNheTFuIn0.T6jCW6cHU1OS50WKLd6I0w';
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Year Built</th>
+                </tr>
+            </table>
 
-       let map = new mapboxgl.Map({
-           container: 'map', // container ID
-           style: 'mapbox://styles/mapbox/satellite-v9', // style URL
-           zoom: 5.5, // starting zoom
-           center: [138, 38] // starting center
-       });
+        </div>
+        <div id="map"></div>
 
-       async function geojsonFetch() {
-           let response, earthquakes, japan, table;
-           response = await fetch('assets/earthquakes.geojson');
-           earthquakes = await response.json();
-           response = await fetch('assets/japan.json');
-           japan = await response.json();
-       };
-       geojsonFetch();
+    </main>
+    <script>
+        mapboxgl.accessToken =
+            'pk.eyJ1Ijoic2xlbzEwOCIsImEiOiJjbG9vdTVobngwMXVqMmtuMHVldHNheTFuIn0.T6jCW6cHU1OS50WKLd6I0w';
+        const map = new mapboxgl.Map({
+            container: 'map', // container ID
+            style: 'mapbox://styles/sleo108/clotl9goj005k01rcaunge0no', // style URL
+            zoom: 10.5, // starting zoom
+            center: [12.5, 41.89] // starting center
+        });
 
-       map.on('load', function loadingData() {
+        async function geojsonFetch() {
 
-       map.addSource('earthquakes', {
-           type: 'geojson',
-           data: earthquakes
-       });
+            let response = await fetch('assets/landmarks.geojson');
 
-       map.addLayer({
-           'id': 'earthquakes-layer',
-           'type': 'circle',
-           'source': 'earthquakes',
-           'paint': {
-           'circle-radius': 8,
-           'circle-stroke-width': 2,
-           'circle-color': 'red',
-           'circle-stroke-color': 'white'
-           }
-       });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            let landmarks = await response.json();
+
+            response = await fetch('assets/roma.geojson');
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            let roma = await response.json();
+
+            var table = document.getElementsByTagName("table");
+            for (let i = 0; i < landmarks.features.length; i++) {
+                (function (index) {
+                    var row = table[0].insertRow(-1);
+                    var cell1 = row.insertCell(0);
+                    var cell2 = row.insertCell(1);
+                    cell1.innerHTML = landmarks.features[index].properties.name;
+                    cell2.innerHTML = landmarks.features[index].properties.year_built;
+
+                    // Create a marker for each landmark
+                    let marker = new mapboxgl.Marker({ color: 'red' })
+                    .setLngLat(landmarks.features[index].geometry.coordinates)
+                    .setPopup(new mapboxgl.Popup({ closeButton: false })
+                    .setHTML(landmarks.features[index].properties.name))
+                    .addTo(map);
+
+                    // Add a click event listener to the marker
+                    marker.getElement().addEventListener('click', function () {
+                        // Extract the coordinates of the clicked landmark
+                        let coordinates = landmarks.features[index].geometry.coordinates;
+
+                        // Fly to the clicked coordinates with a smooth animation
+                        map.flyTo({
+                            center: coordinates,
+                            zoom: 14, // Adjust the zoom level as needed
+                            essential: true // This animation is considered essential with regard to prefers-reduced-motion media query
+                        });
+                    });
+                })(i);
+            }
 
 
-       map.addSource('japan', {
-           type: 'geojson',
-           data: japan
-       });
+            map.addSource('roma', {
+                type: 'geojson',
+                data: roma
+            });
 
-       map.addLayer({
-           'id': 'japan-layer',
-           'type': 'fill',
-           'source': 'japan',
-           'paint': {
-               'fill-color': '#0080ff', // blue color fill
-               'fill-opacity': 0.5
-           }
-       });
+            map.addLayer({
+                'id': 'roma-layer',
+                'type': 'fill',
+                'source': 'roma',
+                'paint': {
+                'fill-color': '#0080ff', // blue color fill
+                'fill-opacity': 0.25
+                }
+            });
+        }
 
-       });
-   </script>
-</body> 
-<html>    
+        geojsonFetch()
+            .catch(e => {
+                console.log('There has been a problem with your fetch operation: ' + e.message);
+            });
+
+        function sortTable() {
+            var table, rows, switching, i, x, y, shouldSwitch;
+            table = document.getElementsByTagName("table")[0];
+            switching = true;
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = parseFloat(rows[i].getElementsByTagName("td")[1].innerHTML);
+                    y = parseFloat(rows[i + 1].getElementsByTagName("td")[1].innerHTML);
+                    if (x < y) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
